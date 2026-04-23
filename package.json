@@ -1,0 +1,16 @@
+{
+  "name": "mztek",
+  "version": "0.1.0",
+  "description": "Zero-trust governance layer for AI-assisted software creation",
+  "type": "module",
+  "bin": {
+    "mztek": "./src/cli.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "mztek": "node ./src/cli.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

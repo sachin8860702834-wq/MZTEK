@@ -1,0 +1,68 @@
+{
+  "project": {
+    "name": "Career Mantra OS",
+    "currentPhase": "planning",
+    "summary": "Operating system for job search in India with automation, privacy-first controls, and human-in-the-loop governance.",
+    "status": "active"
+  },
+  "decisions": [
+    {
+      "summary": "Human approval is required before job applications are submitted.",
+      "rationale": "Automation should reduce effort without removing user control."
+    },
+    {
+      "summary": "Cloud AI is optional; local inference should remain available.",
+      "rationale": "Privacy-sensitive job-search data should stay local by default when possible."
+    },
+    {
+      "summary": "Submission proof artifacts must be captured for all automated application flows.",
+      "rationale": "Users need verification that automation executed correctly."
+    }
+  ],
+  "tasks": [
+    {
+      "title": "Define project notebook and benchmark baseline",
+      "owner": "product",
+      "status": "todo",
+      "kind": "planning",
+      "requiredEvidence": [
+        "review"
+      ],
+      "notes": "Map the product, benchmark pack, and initial dependencies."
+    },
+    {
+      "title": "Build job discovery and deduplication MVP",
+      "owner": "engineering",
+      "status": "todo",
+      "kind": "feature",
+      "requiredEvidence": [
+        "test",
+        "runtime"
+      ],
+      "notes": "At least Naukri, LinkedIn, and Indeed should be supported in MVP."
+    },
+    {
+      "title": "Implement human approval gate for auto-apply flow",
+      "owner": "engineering",
+      "status": "todo",
+      "kind": "workflow",
+      "requiredEvidence": [
+        "review",
+        "runtime"
+      ],
+      "notes": "User must review and approve before submission."
+    },
+    {
+      "title": "Implement privacy-first local/cloud execution policy",
+      "owner": "security",
+      "status": "todo",
+      "kind": "security",
+      "requiredEvidence": [
+        "review",
+        "security"
+      ],
+      "notes": "Cloud must be opt-in and local path must be real."
+    }
+  ],
+  "benchmarkPack": "career-mantra-os"
+}

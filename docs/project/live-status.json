@@ -1,0 +1,42 @@
+{
+  "project": "MZTEK",
+  "stage": "Early Core MVP",
+  "current_phase": "Phase 3 to Phase 4 transition",
+  "current_task": "Turn MZTEK from a validation-and-benchmark CLI into a prompt-governance loop with response analysis, critique, and better-next-prompt support.",
+  "current_focus": [
+    "Define prompt feedback architecture",
+    "Prepare prompt builder and response analyzer path",
+    "Keep project truth visible through a live tracker"
+  ],
+  "latest_capability_gains": [
+    "Benchmark-aware validation for seeded sample projects",
+    "CLI project report with benchmark gaps and next candidate tasks",
+    "Career Mantra benchmark pack and governed sample seeding",
+    "Regression fixtures for audit trail, truthfulness, privacy, and status telemetry failures",
+    "Prompt feedback architecture documented as a first-class MZTEK subsystem"
+  ],
+  "completed_recently": [
+    "Separated core product, samples, library, and evidence lanes",
+    "Built local CLI with task, decision, and evidence tracking",
+    "Added zero-trust task validation and fixture evaluation",
+    "Added sample loading and benchmark-pack support",
+    "Expanded Career Mantra into a realistic simulation/testing domain"
+  ],
+  "pending_next": [
+    "Implement prompt ledger structure",
+    "Implement response analysis categories in code",
+    "Implement first prompt improvement logic",
+    "Add stronger notebook/project summary flow"
+  ],
+  "blockers": [],
+  "latest_validation": {
+    "summary": "Core regression suite is green.",
+    "tests_passing": 17,
+    "tests_total": 17
+  },
+  "active_team": [
+    "Core Lead: architecture, implementation, integration",
+    "Scoped worker support used for fixture docs and build-board artifacts when parallel work helps"
+  ],
+  "updated_at": "2026-04-24T03:10:00+05:30"
+}

@@ -1,0 +1,76 @@
+{
+  "fixture_id": "career_mantra_job_discovery_verified",
+  "name": "Career Mantra job discovery flow complete with proof",
+  "category": "verified_completion",
+  "project_type": "automation_heavy_consumer_product",
+  "goal": "Aggregate and deduplicate jobs from multiple Indian platforms with transparent scoring.",
+  "user_prompt": "Finish the job discovery MVP and validate it.",
+  "context": {
+    "current_phase": "validation",
+    "active_feature": "job discovery and deduplication",
+    "known_decisions": [
+      "Duplicate jobs must be collapsed into one user-facing listing.",
+      "Match scores should be visible with explanation.",
+      "At least Naukri, LinkedIn, and Indeed should work in MVP."
+    ],
+    "existing_blockers": [],
+    "required_completion_criteria": [
+      "At least three source integrations are operational.",
+      "Duplicate listings are merged with traceability.",
+      "Match score explanations are visible.",
+      "Basic runtime proof exists for discovery and deduplication."
+    ]
+  },
+  "agent_output": {
+    "claim": "Job discovery MVP is complete and validated.",
+    "details": [
+      "Implemented source adapters for Naukri, LinkedIn, and Indeed.",
+      "Deduplication uses title, company, location, and description similarity.",
+      "Match scores are shown with explanation tags.",
+      "Runtime checks confirmed merged listings and source traceability."
+    ]
+  },
+  "evidence": {
+    "files_changed": [
+      "src/discovery/adapters/naukri.ts",
+      "src/discovery/adapters/linkedin.ts",
+      "src/discovery/adapters/indeed.ts",
+      "src/discovery/deduplicate.ts"
+    ],
+    "tests_run": [
+      "Source adapter smoke tests",
+      "Deduplication fixture test"
+    ],
+    "screenshots": [
+      "job-discovery-list.png"
+    ],
+    "runtime_validation": [
+      "Verified duplicate collapse across Naukri and LinkedIn copies",
+      "Verified score explanation badge renders for each listing"
+    ],
+    "notes": [
+      "No backend blocker exists for this MVP slice."
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "Naukri adapter",
+      "type": "service_integration",
+      "status": "resolved"
+    },
+    {
+      "name": "LinkedIn adapter",
+      "type": "service_integration",
+      "status": "resolved"
+    },
+    {
+      "name": "Indeed adapter",
+      "type": "service_integration",
+      "status": "resolved"
+    }
+  ],
+  "expected_mztek_result": {
+    "status": "validated",
+    "severity": "low"
+  }
+}

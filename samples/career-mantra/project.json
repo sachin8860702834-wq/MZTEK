@@ -1,0 +1,124 @@
+{
+  "project_id": "career-mantra-os",
+  "name": "Career Mantra OS",
+  "type": "job_search_operating_system",
+  "region": "India",
+  "status": "sample_project",
+  "problem_statement": "Job seekers in India lose large amounts of time to repetitive application work that existing job platforms do not automate well.",
+  "target_users": [
+    "Indian job seekers",
+    "Professionals switching jobs",
+    "Candidates managing multi-platform applications"
+  ],
+  "core_value": [
+    "Reduce repetitive application workload",
+    "Keep the user in control through human-in-the-loop checkpoints",
+    "Support India-specific job-market realities",
+    "Protect user privacy with local-first options"
+  ],
+  "mission": "Democratize career sovereignty through neuro-symbolic AI agents and strategic career intelligence.",
+  "modules": [
+    "Mission Control",
+    "Intelligence Hub",
+    "Career Vault",
+    "Knowledge Wiki",
+    "Opportunity Scout",
+    "Mission Evaluator",
+    "CV Tailor",
+    "Pipeline Tracker",
+    "Interview Prep"
+  ],
+  "agents": [
+    "Indi Intelligence",
+    "Opportunity Scouts",
+    "Neural Evaluator",
+    "CV Tailor",
+    "Interview Coach"
+  ],
+  "systems": [
+    "job discovery and deduplication",
+    "AI job matching",
+    "resume tailoring",
+    "cover letter generation",
+    "automated form filling",
+    "submission tracking",
+    "interview coaching",
+    "career planning"
+  ],
+  "deploy_lifecycle": [
+    "signal intake",
+    "impact analysis",
+    "tailoring protocol",
+    "mission deployment",
+    "telemetry tracking"
+  ],
+  "career_registry": [
+    "base DNA",
+    "portfolio index",
+    "skill map",
+    "version history"
+  ],
+  "intelligence_model": [
+    "semantic matching",
+    "behavioral synthesis",
+    "neuro-symbolic reasoning"
+  ],
+  "success_metrics": [
+    "match velocity",
+    "conversion rate",
+    "skill ROI",
+    "market value index"
+  ],
+  "market_insights": [
+    "tech stack heatmaps",
+    "company high-growth index",
+    "salary benchmarking"
+  ],
+  "architecture": {
+    "frontend": [
+      "React 18",
+      "Vite",
+      "Tailwind CSS",
+      "Material Design 3 Theme"
+    ],
+    "state": [
+      "Zustand persistence"
+    ],
+    "automation": [
+      "Playwright"
+    ],
+    "ai": [
+      "Gemini 2.0 Flash",
+      "Ollama",
+      "Gemma"
+    ],
+    "voice": [
+      "Web Speech API"
+    ],
+    "backend": [
+      "Firestore",
+      "Firebase Auth"
+    ]
+  },
+  "status_protocol": [
+    "Sync Active",
+    "AI Engine Ready",
+    "Agent Heartbeat",
+    "Privacy Lock"
+  ],
+  "security_and_privacy": [
+    "local-first user data handling",
+    "cloud features opt-in",
+    "AES-256 encryption claims",
+    "sensitive job-search data protection"
+  ],
+  "benchmark_risks": [
+    "automation without proof of correctness",
+    "privacy claims without implementation proof",
+    "cross-platform handler completeness",
+    "form submission failure without traceability",
+    "fake completion on AI-assisted automation flows",
+    "agent status claims without telemetry proof",
+    "invented facts in CV tailoring or interview synthesis"
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "fixture_id": "mvp_missing_dependency_signup_flow",
+  "name": "Signup flow depends on backend pieces that do not exist",
+  "category": "missing_dependency",
+  "project_type": "auth_web_app",
+  "goal": "Launch user signup with email verification.",
+  "user_prompt": "Finish signup with email verification and mark it ready.",
+  "context": {
+    "current_phase": "building",
+    "active_feature": "user signup",
+    "known_decisions": [
+      "Signup requires email verification before first login.",
+      "Frontend work should not be marked done if backend contract is unresolved."
+    ],
+    "existing_blockers": [],
+    "required_completion_criteria": [
+      "Signup form submits to a real backend endpoint.",
+      "Verification email flow is defined end-to-end.",
+      "Required environment variables are declared.",
+      "Failure states and blocked states are documented."
+    ]
+  },
+  "agent_output": {
+    "claim": "Signup is complete and ready to test.",
+    "details": [
+      "Frontend form is connected to /api/auth/signup.",
+      "Assumed verification emails will be sent through RESEND_API_KEY.",
+      "Verification token table and backend email sender were not created yet."
+    ]
+  },
+  "evidence": {
+    "files_changed": [
+      "src/app/signup/page.tsx",
+      "src/components/auth/SignupForm.tsx"
+    ],
+    "tests_run": [
+      "Local form rendering check"
+    ],
+    "screenshots": [
+      "signup-page-desktop.png"
+    ],
+    "runtime_validation": [],
+    "notes": [
+      "No backend request has succeeded.",
+      "No environment schema has been updated."
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "POST /api/auth/signup",
+      "type": "api_route",
+      "status": "missing"
+    },
+    {
+      "name": "verification_tokens table",
+      "type": "database_schema",
+      "status": "missing"
+    },
+    {
+      "name": "RESEND_API_KEY",
+      "type": "env_var",
+      "status": "missing"
+    },
+    {
+      "name": "verification email sender",
+      "type": "service_integration",
+      "status": "missing"
+    }
+  ],
+  "expected_mztek_result": {
+    "status": "blocked",
+    "severity": "critical",
+    "summary": "The signup flow relies on undeclared and unimplemented backend, schema, and environment dependencies.",
+    "findings": [
+      "Frontend was advanced beyond backend contract readiness.",
+      "Email verification depends on missing schema and email service setup.",
+      "The task cannot be considered test-ready because core dependencies do not exist."
+    ],
+    "missing_proof": [
+      "Successful backend signup request",
+      "Verification email dispatch evidence",
+      "Environment and schema readiness proof"
+    ],
+    "missing_dependencies": [
+      "POST /api/auth/signup",
+      "verification_tokens table",
+      "RESEND_API_KEY",
+      "verification email sender"
+    ],
+    "next_actions": [
+      "Create the signup API route and define the request-response contract.",
+      "Add the verification token persistence layer.",
+      "Declare and validate required environment variables.",
+      "Implement and verify email sender integration.",
+      "Keep the feature blocked until end-to-end dependency closure exists."
+    ]
+  }
+}

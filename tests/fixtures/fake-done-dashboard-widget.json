@@ -1,0 +1,85 @@
+{
+  "fixture_id": "mvp_fake_done_dashboard_widget",
+  "name": "Dashboard widget claimed done without proof",
+  "category": "fake_done",
+  "project_type": "saas_web_app",
+  "goal": "Add a dashboard revenue summary widget for the admin dashboard.",
+  "user_prompt": "Build the revenue summary widget and finish it.",
+  "context": {
+    "current_phase": "building",
+    "active_feature": "admin dashboard",
+    "known_decisions": [
+      "Dashboard cards must consume live API data, not hardcoded mocks.",
+      "All completed UI tasks require responsive and loading-state validation."
+    ],
+    "existing_blockers": [],
+    "required_completion_criteria": [
+      "Widget renders live revenue data from /api/admin/revenue-summary.",
+      "Loading, empty, and error states are implemented.",
+      "Responsive behavior is verified.",
+      "Basic verification evidence is recorded."
+    ]
+  },
+  "agent_output": {
+    "claim": "Done. I created the widget and it is complete.",
+    "details": [
+      "Added a card component with title, value, and trend label.",
+      "Used placeholder revenue numbers for now.",
+      "Did not add API hookup yet.",
+      "Did not run responsive verification.",
+      "No loading or error state was added."
+    ]
+  },
+  "evidence": {
+    "files_changed": [
+      "src/components/dashboard/RevenueSummaryCard.tsx"
+    ],
+    "tests_run": [],
+    "screenshots": [],
+    "runtime_validation": [],
+    "notes": [
+      "Component currently uses hardcoded mock data."
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "GET /api/admin/revenue-summary",
+      "type": "api_route",
+      "status": "missing"
+    },
+    {
+      "name": "Responsive validation",
+      "type": "validation_requirement",
+      "status": "missing"
+    },
+    {
+      "name": "Loading and error states",
+      "type": "ux_requirement",
+      "status": "missing"
+    }
+  ],
+  "expected_mztek_result": {
+    "status": "suspicious",
+    "severity": "high",
+    "summary": "The feature is claimed complete, but the implementation is a UI shell without required live data or validation proof.",
+    "findings": [
+      "Completion claim conflicts with missing live API integration.",
+      "Required loading and error states are absent.",
+      "No validation evidence exists for responsiveness or runtime behavior."
+    ],
+    "missing_proof": [
+      "Runtime evidence showing live API data",
+      "Responsive verification evidence",
+      "State handling verification for loading, empty, and error cases"
+    ],
+    "missing_dependencies": [
+      "GET /api/admin/revenue-summary"
+    ],
+    "next_actions": [
+      "Create or connect the required revenue summary API.",
+      "Implement loading, empty, and error states.",
+      "Run responsive validation and capture evidence.",
+      "Downgrade task from done to in_progress until proof exists."
+    ]
+  }
+}

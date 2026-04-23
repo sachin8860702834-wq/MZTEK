@@ -1,0 +1,68 @@
+{
+  "fixture_id": "career_mantra_privacy_claim_gap",
+  "name": "Career Mantra claims local-first privacy without implementation proof",
+  "category": "missing_dependency",
+  "project_type": "privacy_sensitive_product",
+  "goal": "Keep sensitive job-search data on device by default and make cloud usage opt-in.",
+  "user_prompt": "Complete privacy mode and mark it secure.",
+  "context": {
+    "current_phase": "security_review",
+    "active_feature": "privacy mode",
+    "known_decisions": [
+      "Cloud features are opt-in only.",
+      "Sensitive personal data must remain local by default.",
+      "Resume and identity data need strong encryption."
+    ],
+    "existing_blockers": [],
+    "required_completion_criteria": [
+      "Local-only data flow is documented and testable.",
+      "Cloud opt-in path is explicit.",
+      "Encryption implementation is present and verified.",
+      "Sensitive fields are not leaked in logs or telemetry."
+    ]
+  },
+  "agent_output": {
+    "claim": "Privacy mode is complete and secure.",
+    "details": [
+      "Gemini integration is still the default execution path.",
+      "Ollama support is mentioned in docs but not wired in settings.",
+      "AES-256 encryption is claimed in copy but implementation is not shown.",
+      "No audit was run for sensitive logging paths."
+    ]
+  },
+  "evidence": {
+    "files_changed": [
+      "src/settings/privacy.tsx",
+      "src/lib/ai/provider.ts"
+    ],
+    "tests_run": [],
+    "screenshots": [
+      "privacy-settings-screen.png"
+    ],
+    "runtime_validation": [],
+    "notes": [
+      "No proof of local-only enforcement or encryption implementation."
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "local inference path",
+      "type": "service_integration",
+      "status": "missing"
+    },
+    {
+      "name": "encryption implementation proof",
+      "type": "security_requirement",
+      "status": "missing"
+    },
+    {
+      "name": "sensitive logging audit",
+      "type": "security_requirement",
+      "status": "missing"
+    }
+  ],
+  "expected_mztek_result": {
+    "status": "blocked",
+    "severity": "critical"
+  }
+}

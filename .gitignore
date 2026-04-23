@@ -1,0 +1,6 @@
+node_modules/
+tmp-*/
+sandboxes/
+
+# Keep reusable internal knowledge private until a private remote is confirmed.
+library/

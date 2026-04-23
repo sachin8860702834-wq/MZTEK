@@ -1,0 +1,88 @@
+{
+  "fixture_id": "mvp_verified_completion_pricing_page",
+  "name": "Pricing page complete with proof and dependency closure",
+  "category": "verified_completion",
+  "project_type": "marketing_site",
+  "goal": "Ship the pricing page for a SaaS landing site.",
+  "user_prompt": "Build the pricing page and finish it properly.",
+  "context": {
+    "current_phase": "validation",
+    "active_feature": "pricing page",
+    "known_decisions": [
+      "Pricing content is static for MVP and does not require a backend API.",
+      "All marketing pages require responsive review and link verification."
+    ],
+    "existing_blockers": [],
+    "required_completion_criteria": [
+      "Pricing tiers are visible and accurate.",
+      "CTA links navigate correctly.",
+      "Responsive behavior is validated.",
+      "Basic visual and link proof is captured."
+    ]
+  },
+  "agent_output": {
+    "claim": "Pricing page is complete and validated.",
+    "details": [
+      "Implemented three pricing tiers using approved static content.",
+      "Connected CTA buttons to signup and contact pages.",
+      "Added mobile and tablet layout adjustments.",
+      "Completed manual link and responsive verification."
+    ]
+  },
+  "evidence": {
+    "files_changed": [
+      "src/app/pricing/page.tsx",
+      "src/components/marketing/PricingTierCard.tsx"
+    ],
+    "tests_run": [
+      "Manual CTA link check",
+      "Manual mobile and tablet responsive review"
+    ],
+    "screenshots": [
+      "pricing-desktop.png",
+      "pricing-tablet.png",
+      "pricing-mobile.png"
+    ],
+    "runtime_validation": [
+      "Verified CTA routes navigate to /signup and /contact",
+      "Verified all tiers render expected values"
+    ],
+    "notes": [
+      "No backend dependency exists by design for this feature."
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "Approved pricing copy",
+      "type": "content_dependency",
+      "status": "resolved"
+    },
+    {
+      "name": "CTA routes",
+      "type": "navigation_dependency",
+      "status": "resolved"
+    },
+    {
+      "name": "Responsive validation",
+      "type": "validation_requirement",
+      "status": "resolved"
+    }
+  ],
+  "expected_mztek_result": {
+    "status": "validated",
+    "severity": "low",
+    "summary": "The feature meets its declared completion criteria and includes validation evidence appropriate for the MVP.",
+    "findings": [
+      "Static-content decision is respected, so no backend dependency is missing.",
+      "Validation evidence covers routing and responsive behavior.",
+      "No open blockers remain for this feature."
+    ],
+    "missing_proof": [],
+    "missing_dependencies": [],
+    "next_actions": [
+      "Mark the feature complete.",
+      "Update project progress and release notes.",
+      "Retain this fixture as a positive regression scenario."
+    ]
+  }
+}
