@@ -1,11 +1,15 @@
 #!/usr/bin/env node
-import { initProject, loadProjectState, projectExists, saveProjectState } from "./fs-store.js";
+import { initProject, projectExists, saveProjectState, loadProjectState } from "./fs-store.js";
 import { createTask, claimTaskDone, addEvidence, addDecision } from "./tasks.js";
 import { validateProject } from "./validator.js";
-import { formatStatus, formatValidation, formatFixtureEvaluation, formatProjectReport } from "./report.js";
+import { formatStatus, formatValidation, formatFixtureEvaluation, formatProjectReport, formatPromptLedger, formatQaLedger } from "./report.js";
 import { evaluateFixture, loadFixture } from "./fixture-evaluator.js";
 import { availableSamples, seedFromSample, workspaceRootFromModule } from "./sample-loader.js";
 import { formatLiveStatus, formatPulse, loadLiveStatus } from "./live-tracker.js";
+import { startApiServer } from "./mztek-api.js";
+import { startDashboardServer } from "./dashboard-server.js";
+import { latestPromptRuns, recordPromptRun } from "./prompt-ledger.js";
+import { latestQaReviews, recordQaReview } from "./review-ledger.js";
 
 function parseArgs(argv) {
   const args = {};
@@ -35,6 +39,23 @@ function projectDirFromArgs(args) {
   return args.project ? args.project : process.cwd();
 }
 
+function dashboardProjectDir(args, workspaceRoot) {
+  if (args.project) {
+    return args.project;
+  }
+
+  if (projectExists(workspaceRoot)) {
+    return workspaceRoot;
+  }
+
+  const sampleSandbox = `${workspaceRoot}\\sandboxes\\career-mantra`;
+  if (projectExists(sampleSandbox)) {
+    return sampleSandbox;
+  }
+
+  return process.cwd();
+}
+
 function help() {
   return [
     "MZTEK CLI",
@@ -45,6 +66,12 @@ function help() {
     "  mztek report [--project=PATH]",
     "  mztek live-status",
     "  mztek pulse",
+    "  mztek serve-api [--port=4317]",
+    "  mztek dashboard [--project=PATH] [--port=4321]",
+    "  mztek prompt-history [--project=PATH]",
+    "  mztek review-history [--project=PATH]",
+    "  mztek record-prompt --task=TASK-001 --intent=... --prompt=... --target=... --expected=... [--response=...] [--outcome=partial] [--evidence-quality=weak] [--critique=...] [--next=...] [--project=PATH]",
+    "  mztek record-review --prompt=PROMPT-001 --task=TASK-001 [--reviewer=qa-sidecar] [--severity=high] [--class=constraint_drift] [--critique=...] [--evidence-gap=...] [--next=...] [--source=manual] [--project=PATH]",
     "  mztek add-task --title=... [--owner=...] [--depends-on=TASK-001,TASK-002] [--required-evidence=test,review] [--project=PATH]",
     "  mztek claim-done --task=TASK-001 [--note=...] [--project=PATH]",
     "  mztek add-evidence --task=TASK-001 --type=test --detail='npm test passed' [--project=PATH]",
@@ -56,7 +83,7 @@ function help() {
   ].join("\n");
 }
 
-function main() {
+async function main() {
   const [command, ...rest] = process.argv.slice(2);
   const args = parseArgs(rest);
   const workspaceRoot = workspaceRootFromModule();
@@ -111,6 +138,15 @@ function main() {
     return;
   }
 
+  if (command === "serve-api") {
+    const port = args.port ? Number(args.port) : undefined;
+    const server = startApiServer({ port });
+    const address = server.address();
+    const printablePort = typeof address === "object" && address ? address.port : port ?? 4317;
+    console.log(`MZTEK API listening on http://localhost:${printablePort}`);
+    return;
+  }
+
   if (command === "seed-sample") {
     if (!args.sample) {
       throw new Error("--sample is required");
@@ -122,7 +158,29 @@ function main() {
     return;
   }
 
+  if (command === "dashboard") {
+    const port = args.port ? Number(args.port) : 4321;
+    const projectDir = dashboardProjectDir(args, workspaceRoot);
+    try {
+      const server = await startDashboardServer({
+        projectDir,
+        workspaceRoot,
+        port
+      });
+      const address = server.address();
+      const printablePort = typeof address === "object" && address ? address.port : port;
+      console.log(`MZTEK dashboard listening on http://localhost:${printablePort} for ${projectDir}`);
+      return;
+    } catch (error) {
+      if (error.code === "EADDRINUSE") {
+        throw new Error(`Port ${port} is already in use. Stop the existing process or start with --port=<open-port>, for example: npm run dashboard -- --port=4322`);
+      }
+      throw error;
+    }
+  }
+
   const projectDir = projectDirFromArgs(args);
+
   const state = loadProjectState(projectDir);
 
   switch (command) {
@@ -132,6 +190,55 @@ function main() {
     }
     case "report": {
       console.log(formatProjectReport(state));
+      return;
+    }
+    case "prompt-history": {
+      console.log(formatPromptLedger(latestPromptRuns(state, 10)));
+      return;
+    }
+    case "review-history": {
+      console.log(formatQaLedger(latestQaReviews(state, 10)));
+      return;
+    }
+    case "record-prompt": {
+      if (!args.task || !args.intent || !args.prompt || !args.target || !args.expected) {
+        throw new Error("--task, --intent, --prompt, --target, and --expected are required");
+      }
+
+      const record = recordPromptRun(state, {
+        taskId: args.task,
+        userIntent: args.intent,
+        governedPrompt: args.prompt,
+        target: args.target,
+        expectedOutcome: args.expected,
+        responseSummary: args.response,
+        outcome: args.outcome,
+        evidenceQuality: args["evidence-quality"],
+        critique: args.critique,
+        nextPromptStrategy: args.next
+      });
+      saveProjectState(projectDir, state);
+      console.log(`Prompt recorded: ${record.id}`);
+      return;
+    }
+    case "record-review": {
+      if (!args.prompt || !args.task) {
+        throw new Error("--prompt and --task are required");
+      }
+
+      const record = recordQaReview(state, {
+        promptId: args.prompt,
+        taskId: args.task,
+        reviewer: args.reviewer,
+        severity: args.severity,
+        failureClass: args.class,
+        critique: args.critique,
+        evidenceGap: args["evidence-gap"],
+        recommendedAction: args.next,
+        sourceType: args.source
+      });
+      saveProjectState(projectDir, state);
+      console.log(`QA review recorded: ${record.id}`);
       return;
     }
     case "add-task": {
@@ -198,7 +305,7 @@ function main() {
 }
 
 try {
-  main();
+  await main();
 } catch (error) {
   console.error(`Error: ${error.message}`);
   process.exitCode = 1;

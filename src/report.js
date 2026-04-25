@@ -183,3 +183,45 @@ export function formatFixtureEvaluation(result) {
 
   return lines.join("\n");
 }
+
+export function formatPromptLedger(entries) {
+  const lines = ["Prompt Ledger:"];
+
+  if (!entries.length) {
+    lines.push("- No prompt runs recorded yet.");
+    return lines.join("\n");
+  }
+
+  for (const item of entries) {
+    lines.push(`- ${item.id} | task ${item.taskId} | target ${item.target} | outcome ${item.outcome} | evidence ${item.evidenceQuality}`);
+    if (item.critique) {
+      lines.push(`  critique: ${item.critique}`);
+    }
+    if (item.nextPromptStrategy) {
+      lines.push(`  next: ${item.nextPromptStrategy}`);
+    }
+  }
+
+  return lines.join("\n");
+}
+
+export function formatQaLedger(entries) {
+  const lines = ["QA Review Ledger:"];
+
+  if (!entries.length) {
+    lines.push("- No QA reviews recorded yet.");
+    return lines.join("\n");
+  }
+
+  for (const item of entries) {
+    lines.push(`- ${item.id} | prompt ${item.promptId} | task ${item.taskId} | severity ${item.severity} | class ${item.failureClass}`);
+    if (item.critique) {
+      lines.push(`  critique: ${item.critique}`);
+    }
+    if (item.recommendedAction) {
+      lines.push(`  next: ${item.recommendedAction}`);
+    }
+  }
+
+  return lines.join("\n");
+}

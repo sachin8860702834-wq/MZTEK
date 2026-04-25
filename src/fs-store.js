@@ -1,6 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
-import { FILES, MZTEK_DIR, DEFAULT_PROJECT, DEFAULT_TASKS, DEFAULT_DECISIONS, DEFAULT_VALIDATIONS } from "./constants.js";
+import {
+  FILES,
+  MZTEK_DIR,
+  DEFAULT_PROJECT,
+  DEFAULT_TASKS,
+  DEFAULT_DECISIONS,
+  DEFAULT_PROMPTS,
+  DEFAULT_REVIEWS,
+  DEFAULT_VALIDATIONS
+} from "./constants.js";
 
 function clone(value) {
   return JSON.parse(JSON.stringify(value));
@@ -38,6 +47,8 @@ export function initProject(rootDir, projectName) {
   writeJson(root, FILES.project, project);
   writeJson(root, FILES.tasks, clone(DEFAULT_TASKS));
   writeJson(root, FILES.decisions, clone(DEFAULT_DECISIONS));
+  writeJson(root, FILES.prompts, clone(DEFAULT_PROMPTS));
+  writeJson(root, FILES.reviews, clone(DEFAULT_REVIEWS));
   writeJson(root, FILES.validations, clone(DEFAULT_VALIDATIONS));
 }
 
@@ -63,6 +74,8 @@ export function loadProjectState(rootDir) {
     project: readJson(rootDir, FILES.project, DEFAULT_PROJECT),
     tasks: readJson(rootDir, FILES.tasks, DEFAULT_TASKS),
     decisions: readJson(rootDir, FILES.decisions, DEFAULT_DECISIONS),
+    prompts: readJson(rootDir, FILES.prompts, DEFAULT_PROMPTS),
+    reviews: readJson(rootDir, FILES.reviews, DEFAULT_REVIEWS),
     validations: readJson(rootDir, FILES.validations, DEFAULT_VALIDATIONS),
     benchmarkPack: readJson(rootDir, FILES.benchmarkPack, null),
     sampleContext: readJson(rootDir, FILES.sampleContext, null)
@@ -73,6 +86,8 @@ export function saveProjectState(rootDir, state) {
   writeJson(rootDir, FILES.project, state.project);
   writeJson(rootDir, FILES.tasks, state.tasks);
   writeJson(rootDir, FILES.decisions, state.decisions);
+  writeJson(rootDir, FILES.prompts, state.prompts);
+  writeJson(rootDir, FILES.reviews, state.reviews);
   writeJson(rootDir, FILES.validations, state.validations);
   if (state.benchmarkPack) {
     writeJson(rootDir, FILES.benchmarkPack, state.benchmarkPack);
