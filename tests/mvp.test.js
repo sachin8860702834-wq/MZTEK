@@ -28,9 +28,11 @@ function makeTempProject() {
 test("init creates a usable mztek workspace", () => {
   const root = makeTempProject();
   const projectDir = path.join(root, ".mztek");
+  const runtimeDir = path.join(projectDir, "runtime");
   assert.equal(fs.existsSync(projectDir), true);
-  assert.equal(fs.existsSync(path.join(projectDir, "project.json")), true);
-  assert.equal(fs.existsSync(path.join(projectDir, "tasks.json")), true);
+  assert.equal(fs.existsSync(runtimeDir), true);
+  assert.equal(fs.existsSync(path.join(runtimeDir, "project.json")), true);
+  assert.equal(fs.existsSync(path.join(runtimeDir, "tasks.json")), true);
 });
 
 test("validator catches fake done with missing evidence", () => {
@@ -243,7 +245,7 @@ test("career mantra sample can seed a governed project", () => {
   assert.equal(state.project.benchmarkPack, "career-mantra-os");
   assert.equal(state.tasks.items.length >= 4, true);
   assert.equal(state.decisions.items.length, 3);
-  assert.equal(fs.existsSync(path.join(root, ".mztek", "benchmark-pack.json")), true);
+  assert.equal(fs.existsSync(path.join(root, ".mztek", "runtime", "benchmark-pack.json")), true);
   assert.equal(state.benchmarkPack.name, "Career Mantra OS Benchmark Pack");
 });
 

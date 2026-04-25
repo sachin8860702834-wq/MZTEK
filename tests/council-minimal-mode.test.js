@@ -97,7 +97,7 @@ test("council enters minimal mode after high prior dispatch failure rate", async
   assert.equal(result.councilRun.routingMode, "minimal");
   assert.deepEqual(
     result.routes.map((route) => route.role),
-    ["builder", "false_positive_detector"]
+    ["builder"]
   );
   assert.equal(result.summary.decisionTrace[0].mode, "minimal");
   assert.equal(result.summary.decisionTrace[0].dispatchFailureRate, 0.75);
