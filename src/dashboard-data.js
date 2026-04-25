@@ -218,8 +218,11 @@ function buildIntegrations(projectDir, workspaceRoot, env) {
       key: "nvidia",
       title: "NVIDIA NIM",
       summary: nvidia.status === "connected"
-        ? "Connected through the dashboard and validated through the official API."
+        ? (nvidia.chatFeatureEnabled
+          ? "Connected through the dashboard and validated through the official API."
+          : "Connected, but workforce chat is currently feature-gated.")
         : "Use the dashboard to connect NVIDIA securely and validate it before live use.",
+      detail: `${nvidia.mode?.toUpperCase() || "NVIDIA"} mode${nvidia.model ? ` | ${nvidia.model}` : ""}${nvidia.chatFeatureEnabled ? "" : " | Experimental (Disabled)"}`,
       ...nvidia
     },
     {

@@ -13,6 +13,7 @@ import {
   callNvidiaChat,
   connectNvidia,
   getNvidiaStatus,
+  isNvidiaChatFeatureEnabled,
   validateNvidiaConnection
 } from "./integrations/nvidia.js";
 
@@ -58,6 +59,7 @@ function buildIntegrationCards({ env, links, fileNames, projectDir, workspaceRoo
   const nvidia = getNvidiaStatus(workspaceRoot, env);
   const github = summarizeGitHubIntegration(workspaceRoot, links.github);
   const files = summarizeFileUploads(fileNames);
+  const nvidiaChatEnabled = isNvidiaChatFeatureEnabled(env);
 
   return [
     {
@@ -65,12 +67,15 @@ function buildIntegrationCards({ env, links, fileNames, projectDir, workspaceRoo
       title: "NVIDIA NIM",
       status: nvidia.status,
       summary: nvidia.status === "connected"
-        ? "Connected through the dashboard and validated with a real API response."
+        ? (nvidiaChatEnabled
+          ? "Connected through the dashboard and validated with a real API response."
+          : "Connected, but workforce chat is currently feature-gated.")
         : "Connect NVIDIA from the dashboard to switch out of mock mode safely.",
-      detail: `${nvidia.mode.toUpperCase()} mode${nvidia.model ? ` | ${nvidia.model}` : ""}`,
+      detail: `${nvidia.mode.toUpperCase()} mode${nvidia.model ? ` | ${nvidia.model}` : ""}${nvidiaChatEnabled ? "" : " | Experimental (Disabled)"}`,
       model: nvidia.model,
       models: nvidia.models,
       baseUrl: nvidia.baseUrl,
+      chatFeatureEnabled: nvidiaChatEnabled,
       warning: nvidia.warning || ""
     },
     {
@@ -207,7 +212,19 @@ export function createDashboardServer({ projectDir, workspaceRoot, env = process
             }
           });
 
+          if (result.disabled) {
+            sendJson(response, 200, {
+              status: "disabled",
+              message: result.message || "NVIDIA workforce is experimental and currently disabled"
+            });
+            return;
+          }
+
           if (!result.ok) {
+            console.error("NVIDIA chat request failed", {
+              statusCode: result.statusCode || 500,
+              message: result.error
+            });
             sendJson(response, result.statusCode || 500, {
               ok: false,
               error: result.error
@@ -222,9 +239,12 @@ export function createDashboardServer({ projectDir, workspaceRoot, env = process
             result: result.result
           });
         } catch (error) {
+          console.error("NVIDIA chat route crashed", {
+            message: error?.message || String(error)
+          });
           sendJson(response, 500, {
             ok: false,
-            error: error.message
+            error: "Failed to process NVIDIA workforce request."
           });
         }
       })();

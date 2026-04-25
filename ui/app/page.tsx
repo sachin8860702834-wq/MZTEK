@@ -110,6 +110,15 @@ export default function DashboardPage() {
 
   async function runGoal(event: FormEvent) {
     event.preventDefault();
+    const nvidiaChatEnabled = integrationByKey("nvidia")?.chatFeatureEnabled !== false;
+    if (!nvidiaChatEnabled) {
+      pushChat({
+        role: "system",
+        text: "NVIDIA workforce is experimental and currently disabled."
+      });
+      return;
+    }
+
     const trimmed = goal.trim();
     if (!trimmed) return;
 
@@ -231,6 +240,7 @@ export default function DashboardPage() {
   const totalWorkItems = (data?.boardColumns || []).reduce((sum, column) => sum + column.items.length, 0);
   const githubIntegration = integrationByKey("github");
   const nvidiaIntegration = integrationByKey("nvidia");
+  const nvidiaChatEnabled = nvidiaIntegration?.chatFeatureEnabled !== false;
   const suggestedActions = data?.controller.permissions || [];
   const hasLiveData = Boolean(data);
   const autoRefreshLabel = refreshing ? "Refreshing live data..." : "Auto-refresh every 10 seconds";
@@ -348,6 +358,11 @@ export default function DashboardPage() {
         </div>
 
         <SectionCard title="Command Box + Chat" subtitle="Tell MZTEK what to build. The backend run result is captured as live operation messages.">
+          {!nvidiaChatEnabled ? (
+            <div className="mb-3 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-900">
+              <span className="font-semibold">Experimental (Disabled)</span>: NVIDIA workforce is currently feature-gated.
+            </div>
+          ) : null}
           <form onSubmit={runGoal} className="grid gap-3">
             <textarea
               value={goal}
@@ -398,10 +413,10 @@ export default function DashboardPage() {
               </button>
               <button
                 type="submit"
-                disabled={working}
+                disabled={working || !nvidiaChatEnabled}
                 className="rounded-xl bg-slate-950 px-4 py-2 text-sm font-medium text-white hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {working ? "Running..." : "Run command"}
+                {working ? "Running..." : nvidiaChatEnabled ? "Run command" : "Run command (Disabled)"}
               </button>
             </div>
             {selectedFiles.length ? (

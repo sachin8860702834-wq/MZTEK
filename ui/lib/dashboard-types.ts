@@ -41,6 +41,7 @@ export type IntegrationCard = {
   baseUrl?: string;
   username?: string;
   permissionStatus?: string;
+  chatFeatureEnabled?: boolean;
 };
 
 export type BoardItem = {

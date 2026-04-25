@@ -300,6 +300,7 @@ export function renderDashboardPage(data) {
       .board-column-head, .board-card-head, .ledger-head, .integration-head { display: flex; justify-content: space-between; gap: 10px; align-items: center; }
       .board-card-id { font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
       .board-chip { padding: 5px 9px; border-radius: 999px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; }
+      .feature-chip { display: inline-flex; margin-left: 8px; vertical-align: middle; }
       .tone-good { background: rgba(19,121,91,0.12); color: var(--good); }
       .tone-warn { background: rgba(161,98,7,0.12); color: var(--warn); }
       .tone-bad { background: rgba(180,35,24,0.12); color: var(--bad); }
@@ -369,7 +370,7 @@ export function renderDashboardPage(data) {
 
         <section class="intake">
           <div class="input-panel">
-            <div class="eyebrow">Command Box</div>
+            <div class="eyebrow">Command Box <span id="chat-feature-badge" class="board-chip tone-warn feature-chip hero-hidden">Experimental (Disabled)</span></div>
             <textarea id="goal-input" class="prompt-box" placeholder="What do you want to build?">${escapeHtml(live.current_task || "")}</textarea>
             <div class="action-row">
               <button id="start-btn" class="button" type="button">Run Control Room</button>
@@ -621,6 +622,7 @@ export function renderDashboardPage(data) {
       const connectGithubButton = document.getElementById("connect-github-btn");
       const workspaceRoot = document.getElementById("workspace-root");
       const chatHistory = document.getElementById("chat-history");
+      const chatFeatureBadge = document.getElementById("chat-feature-badge");
 
       const githubModal = document.getElementById("github-modal");
       const githubRepoInput = document.getElementById("github-repo-input");
@@ -635,6 +637,16 @@ export function renderDashboardPage(data) {
       const nvidiaBaseUrlInput = document.getElementById("nvidia-base-url-input");
       const nvidiaModelInput = document.getElementById("nvidia-model-input");
       const nvidiaConnectSubmit = document.getElementById("nvidia-connect-submit");
+
+      const nvidiaIntegration = (seed.integrations || []).find((item) => item.key === "nvidia") || {};
+      const nvidiaChatEnabled = nvidiaIntegration.chatFeatureEnabled !== false;
+      if (!nvidiaChatEnabled) {
+        startButton.disabled = true;
+        startButton.textContent = "Run Control Room (Disabled)";
+        runStatus.textContent = "NVIDIA workforce is experimental and currently disabled.";
+        chatFeatureBadge.classList.remove("hero-hidden");
+        chatHistory.innerHTML = '<div class="chat-item"><strong>System</strong><p>NVIDIA workforce is experimental and currently disabled. Enable MZTEK_FEATURE_NVIDIA_CHAT=true to turn this on.</p></div>';
+      }
       const nvidiaModalStatus = document.getElementById("nvidia-modal-status");
 
       let githubPollTimer = null;
@@ -1001,6 +1013,12 @@ export function renderDashboardPage(data) {
       });
 
       startButton.addEventListener("click", async () => {
+        if (!nvidiaChatEnabled) {
+          runStatus.textContent = "NVIDIA workforce is experimental and currently disabled.";
+          pushChat("System", "NVIDIA workforce is experimental and currently disabled.");
+          return;
+        }
+
         const message = goalInput.value.trim();
         const fileNames = [...fileInput.files].map((file) => file.name);
         const links = currentLinks();

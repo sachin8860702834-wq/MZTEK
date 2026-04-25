@@ -450,6 +450,7 @@ test("dashboard nvidia route falls back to mock mode without API key", async () 
     projectDir: root,
     workspaceRoot: root,
     env: {
+      MZTEK_FEATURE_NVIDIA_CHAT: "true",
       NVIDIA_API_KEY: "",
       NVIDIA_BASE_URL: "https://integrate.api.nvidia.com/v1",
       NVIDIA_DEFAULT_MODEL: ""
@@ -480,6 +481,39 @@ test("dashboard nvidia route falls back to mock mode without API key", async () 
   assert.equal(payload.provider, "mock");
   assert.equal(Array.isArray(payload.result.tasks), true);
   assert.equal(payload.result.tasks.length > 0, true);
+});
+
+test("dashboard nvidia route returns disabled response when feature flag is off", async () => {
+  const root = makeTempProject();
+  const server = createDashboardServer({
+    projectDir: root,
+    workspaceRoot: root,
+    env: {
+      MZTEK_FEATURE_NVIDIA_CHAT: "false",
+      NVIDIA_API_KEY: "",
+      NVIDIA_BASE_URL: "https://integrate.api.nvidia.com/v1",
+      NVIDIA_DEFAULT_MODEL: ""
+    }
+  });
+
+  await new Promise((resolve) => server.listen(0, resolve));
+  const port = server.address().port;
+
+  const response = await fetch(`http://127.0.0.1:${port}/api/nvidia-chat`, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json"
+    },
+    body: JSON.stringify({
+      message: "Build an internal dashboard for MZTEK"
+    })
+  });
+  const payload = await response.json();
+  server.close();
+
+  assert.equal(response.status, 200);
+  assert.equal(payload.status, "disabled");
+  assert.equal(payload.message, "NVIDIA workforce is experimental and currently disabled");
 });
 
 test("dashboard analyze-project route returns project understanding", async () => {

@@ -1,6 +1,11 @@
 import { loadConnectionState, publicConnectionState, updateConnectionState } from "../connection-store.js";
 import { runNvidiaWorkforceTask } from "../workforce/index.js";
 
+export function isNvidiaChatFeatureEnabled(env = process.env) {
+  const raw = String(env.MZTEK_FEATURE_NVIDIA_CHAT ?? "false").trim().toLowerCase();
+  return ["1", "true", "yes", "on"].includes(raw);
+}
+
 function inferProjectType(message = "", fileNames = [], links = {}) {
   const haystack = `${message} ${fileNames.join(" ")} ${Object.values(links).join(" ")}`.toLowerCase();
 
@@ -233,6 +238,7 @@ function resolvedCredentials(rootDir, env = process.env) {
 }
 
 export function getNvidiaStatus(rootDir, env = process.env) {
+  const chatFeatureEnabled = isNvidiaChatFeatureEnabled(env);
   const publicState = publicStatusFromStored(rootDir, env);
 
   if (!publicState.connected) {
@@ -243,7 +249,8 @@ export function getNvidiaStatus(rootDir, env = process.env) {
       baseUrl: publicState.baseUrl || normalizeBaseUrl(""),
       model: "",
       models: [],
-      warning: publicState.validationMessage || "Connect NVIDIA to enable live model responses."
+      warning: publicState.validationMessage || "Connect NVIDIA to enable live model responses.",
+      chatFeatureEnabled
     };
   }
 
@@ -255,7 +262,8 @@ export function getNvidiaStatus(rootDir, env = process.env) {
       baseUrl: publicState.baseUrl,
       model: publicState.activeModel,
       models: publicState.availableModels,
-      warning: publicState.validationMessage
+      warning: publicState.validationMessage,
+      chatFeatureEnabled
     };
   }
 
@@ -266,7 +274,8 @@ export function getNvidiaStatus(rootDir, env = process.env) {
     baseUrl: publicState.baseUrl,
     model: publicState.activeModel,
     models: publicState.availableModels,
-    warning: ""
+    warning: "",
+    chatFeatureEnabled
   };
 }
 
@@ -386,6 +395,17 @@ export async function validateNvidiaConnection({ rootDir, env = process.env, fet
 export async function callNvidiaChat({ rootDir, env = process.env, fetchImpl = fetch, payload }) {
   const status = getNvidiaStatus(rootDir, env);
   const credentials = resolvedCredentials(rootDir, env);
+  const chatFeatureEnabled = isNvidiaChatFeatureEnabled(env);
+
+  if (!chatFeatureEnabled) {
+    return {
+      ok: true,
+      disabled: true,
+      status: "disabled",
+      message: "NVIDIA workforce is experimental and currently disabled",
+      providerStatus: status
+    };
+  }
 
   if (!credentials?.apiKey || status.status !== "connected") {
     return {
