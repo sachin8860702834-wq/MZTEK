@@ -1,5 +1,46 @@
+## Dependencies
 node_modules/
+**/node_modules/
+
+## Build and coverage artifacts
+.next/
+**/.next/
+dist/
+**/dist/
+coverage/
+**/coverage/
+tmp/
 tmp-*/
+temp/
+cache/
+.cache/
+ui/test-results/
+*.tsbuildinfo
+
+## Local snapshots and archives
+_snapshots/
+*.zip
+
+## Environment and secrets
+.env
+.env.*
+!.env.example
+.mztek/secure/
+*.key
+*.pem
+*.p12
+*.pfx
+
+## OS/editor noise
+.DS_Store
+Thumbs.db
+Desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+
+## Project-specific directories
 sandboxes/
 
 # Keep reusable internal knowledge private until a private remote is confirmed.
