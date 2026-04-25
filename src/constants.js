@@ -1,4 +1,8 @@
 export const MZTEK_DIR = ".mztek";
+export const MZTEK_RUNTIME_DIR = "runtime";
+export const MZTEK_LOGS_DIR = "logs";
+export const MZTEK_CONFIG_DIR = "config";
+export const MZTEK_TEMPLATES_DIR = "templates";
 
 export const FILES = {
   project: "project.json",

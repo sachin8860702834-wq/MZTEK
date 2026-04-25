@@ -26,6 +26,8 @@ _snapshots/
 .env.*
 !.env.example
 .mztek/secure/
+.mztek/runtime/
+.mztek/logs/
 *.key
 *.pem
 *.p12

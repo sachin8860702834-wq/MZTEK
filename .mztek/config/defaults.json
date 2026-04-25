@@ -1,0 +1,6 @@
+{
+  "runtimeMode": "local",
+  "stateDirectory": ".mztek/runtime",
+  "logsDirectory": ".mztek/logs",
+  "notes": "Committed defaults only. Runtime state and logs are intentionally untracked."
+}

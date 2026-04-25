@@ -3,6 +3,10 @@ import path from "node:path";
 import {
   FILES,
   MZTEK_DIR,
+  MZTEK_RUNTIME_DIR,
+  MZTEK_LOGS_DIR,
+  MZTEK_CONFIG_DIR,
+  MZTEK_TEMPLATES_DIR,
   DEFAULT_PROJECT,
   DEFAULT_TASKS,
   DEFAULT_DECISIONS,
@@ -23,6 +27,14 @@ export function mztekPath(rootDir, fileName = "") {
   return path.join(resolveRoot(rootDir), MZTEK_DIR, fileName);
 }
 
+export function runtimePath(rootDir, fileName = "") {
+  return mztekPath(rootDir, path.join(MZTEK_RUNTIME_DIR, fileName));
+}
+
+function legacyStatePath(rootDir, fileName = "") {
+  return mztekPath(rootDir, fileName);
+}
+
 export function projectExists(rootDir) {
   return fs.existsSync(mztekPath(rootDir));
 }
@@ -35,8 +47,11 @@ export function ensureProject(rootDir) {
 
 export function initProject(rootDir, projectName) {
   const root = resolveRoot(rootDir);
-  const dir = mztekPath(root);
-  fs.mkdirSync(dir, { recursive: true });
+  fs.mkdirSync(mztekPath(root), { recursive: true });
+  fs.mkdirSync(runtimePath(root), { recursive: true });
+  fs.mkdirSync(mztekPath(root, MZTEK_LOGS_DIR), { recursive: true });
+  fs.mkdirSync(mztekPath(root, MZTEK_CONFIG_DIR), { recursive: true });
+  fs.mkdirSync(mztekPath(root, MZTEK_TEMPLATES_DIR), { recursive: true });
 
   const timestamp = new Date().toISOString();
   const project = clone(DEFAULT_PROJECT);
@@ -54,17 +69,22 @@ export function initProject(rootDir, projectName) {
 
 export function readJson(rootDir, fileName, fallback) {
   ensureProject(rootDir);
-  const filePath = mztekPath(rootDir, fileName);
+  const filePath = runtimePath(rootDir, fileName);
 
-  if (!fs.existsSync(filePath)) {
-    return clone(fallback);
+  if (fs.existsSync(filePath)) {
+    return JSON.parse(fs.readFileSync(filePath, "utf8"));
   }
 
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  const legacyPath = legacyStatePath(rootDir, fileName);
+  if (fs.existsSync(legacyPath)) {
+    return JSON.parse(fs.readFileSync(legacyPath, "utf8"));
+  }
+
+  return clone(fallback);
 }
 
 export function writeJson(rootDir, fileName, value) {
-  const filePath = mztekPath(rootDir, fileName);
+  const filePath = runtimePath(rootDir, fileName);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, `${JSON.stringify(value, null, 2)}\n`, "utf8");
 }
