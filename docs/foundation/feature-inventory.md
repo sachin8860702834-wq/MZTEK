@@ -19,6 +19,9 @@ Convert rough product ideas into structured, buildable plans.
 - Feature decomposition
 - Build-order recommendations
 - Product readiness classification
+- capability-aware idea shaping for GenAI products
+- AI feature maturity guidance
+- over-engineering prevention for GenAI asks
 
 ## 2. Project Notebook and Memory
 
@@ -97,6 +100,7 @@ Enforce security-first and product-quality-first execution.
 - Secret handling checks
 - Abuse-path thinking
 - QA reviewer agent
+- Side-by-side QA ledger linked to builder attempts
 - Security reviewer agent
 - Release gate
 - Risk classification
@@ -131,6 +135,23 @@ Make MZTEK the default interface between user intent and execution tools.
 - Tool-response auditing
 - Next-step recommendation
 - Prompt history and replay
+- prompt ledger
+- capability-aware prompt construction
+- prompt guidance from GenAI knowledge packs
+
+## 8.5. GenAI Knowledge System
+
+### Goal
+Give MZTEK curriculum-level understanding of modern AI product building so users
+get expert guidance without needing expert knowledge.
+
+### Features
+- GenAI capability ladder
+- knowledge packs for prompting, APIs, RAG, agents, deployment, and model tradeoffs
+- task-to-capability selection logic
+- capability-aware validation expectations
+- capability-aware idea shaping
+- anti-overengineering guidance
 
 ## 9. IDE and Tool Integration
 
@@ -146,6 +167,8 @@ Connect MZTEK to editors, agents, and execution tools without hard vendor lock.
 - File/change tracking
 - Background task hooks
 - MCP-aware integration
+- user-connected source adapters
+- Google account connector
 
 ## 10. Model Routing and Provider Layer
 
@@ -162,6 +185,18 @@ Support local, cloud, and hybrid model execution intelligently.
 - Strong-model escalation
 - Token and budget tracking
 
+## 10.5. Source Connectivity Layer
+
+### Goal
+Allow users to connect their own data and research sources safely so MZTEK can
+use grounded context without depending on anonymous public links.
+
+### Features
+- Google account connection
+- user-authorized source ingestion
+- Drive and document source adapters
+- future NotebookLM-compatible source adapter path
+
 ## 11. Dashboard and Tracking UX
 
 ### Goal
@@ -177,6 +212,10 @@ Give users a clear picture of project state, communication, ownership, and risk.
 - Decision timeline
 - Dependency map
 - Fake-completion alerts
+- Decision Trace panel
+- Live reasoning basis view
+- Principle and evidence visibility
+- Provenance labels for recorded versus derived versus default dashboard state
 
 ## 12. Voice Companion
 
@@ -235,6 +274,7 @@ Provide ready-made product-building methods for common project types.
 - IDE adapters
 - Local/cloud provider router
 - Idea-shaping and market intelligence
+- GenAI knowledge packs and capability routing
 
 ### Later expansion
 - Advanced learning engine

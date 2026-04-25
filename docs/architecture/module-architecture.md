@@ -10,6 +10,7 @@ agents, and execution tools.
 ### Modules
 - Builder chat
 - Dashboard
+- Decision Trace view
 - Task views
 - Conversation views
 - Project notebook views
@@ -21,6 +22,7 @@ agents, and execution tools.
 - Show current project truth
 - Surface blockers, ownership, and next steps
 - Provide human-friendly explanations
+- Show the structured basis for current decisions and checks
 - Provide concise state-aware progress updates without requiring the user to inspect raw logs
 - Support natural spoken project updates and questions from grounded state
 
@@ -54,6 +56,8 @@ agents, and execution tools.
 - Skill registry
 - Handoff manager
 - Shared memory coordinator
+- Agent counseling engine
+- QA review coordinator
 - Lesson engine
 - Failure engine
 - Pattern engine
@@ -62,6 +66,8 @@ agents, and execution tools.
 - Build structured teams when needed
 - Assign work by skill and scope
 - Track communication and ownership
+- Keep builder and QA viewpoints separate when trust needs independent review
+- Adapt strategy when workers repeatedly ignore governed execution method
 - Learn from failures and successful patterns
 - Improve future routing and checks
 
@@ -125,7 +131,7 @@ agents, and execution tools.
 10. Zero-trust validator checks claims, missing proof, contradictions, and risks.
 11. Status engine accepts, blocks, downgrades, or routes for fix.
 12. Documentation and learning layers update the notebook, tasks, decisions, and lessons.
-13. Dashboard, Project Pulse, and Voice Companion reflect the new project state.
+13. Dashboard, Project Pulse, Voice Companion, and Decision Trace reflect the new project state.
 
 ## Foundational Dependencies
 

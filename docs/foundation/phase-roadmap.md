@@ -116,6 +116,24 @@ comparing their concept with existing alternatives.
 - A rough user idea can be turned into a sharper MVP direction with clear
   "build now" versus "later" guidance.
 
+## Phase 5.75: GenAI Knowledge System
+
+### Goal
+Turn modern GenAI building knowledge into a runtime guidance system for prompt
+construction, validation, and MVP shaping.
+
+### Deliverables
+- GenAI capability map
+- knowledge pack structure
+- task-to-capability routing
+- capability-aware prompt guidance
+- capability-aware validation expectations
+
+### Success Test
+- A vague AI feature request can be turned into a better governed prompt and a
+  more realistic implementation path without requiring the user to know the
+  underlying technical stack.
+
 ## Phase 6: Benchmark and Security Packs
 
 ### Goal
@@ -143,6 +161,22 @@ Connect MZTEK to tools while keeping vendor independence.
 
 ### Success Test
 - MZTEK can govern execution through at least one IDE path and one model path.
+
+## Phase 7.5: User-Connected Source Access
+
+### Goal
+Let users connect their own Google-accessible knowledge sources so MZTEK can
+ingest grounded context without relying on brittle anonymous-link workflows.
+
+### Deliverables
+- Google OAuth connection path
+- session-aware source API
+- initial source adapter contracts
+- future NotebookLM-compatible ingestion path
+
+### Success Test
+- A user can connect their own Google account and MZTEK can confirm a governed
+  source connection is active.
 
 ## Phase 8: Agent and Team System
 

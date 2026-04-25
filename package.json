@@ -7,8 +7,16 @@
     "mztek": "./src/cli.js"
   },
   "scripts": {
-    "test": "node --test",
-    "mztek": "node ./src/cli.js"
+    "test": "node --test tests/*.test.js",
+    "build": "node --check src\\connection-store.js && node --check src\\dashboard-server.js && node --check src\\dashboard-page.js && node --check src\\dashboard-data.js && node --check src\\integrations\\github.js && node --check src\\integrations\\nvidia.js",
+    "ui:dev": "npm run dev --prefix ui",
+    "ui:build": "npm run build --prefix ui",
+    "ui:start": "npm run start --prefix ui",
+    "mztek": "node ./src/cli.js",
+    "serve:api": "node ./src/cli.js serve-api",
+    "dashboard": "node ./src/cli.js dashboard --project=E:\\MZTEK --port=4321",
+    "dev": "npm run dashboard",
+    "start": "npm run dashboard"
   },
   "engines": {
     "node": ">=20"
