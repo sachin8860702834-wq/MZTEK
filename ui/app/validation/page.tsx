@@ -66,7 +66,7 @@ function asNumber(value: unknown) {
   return Number.isFinite(num) ? num : 0;
 }
 
-function pickRecentRuns(data?: DashboardData) {
+function pickRecentRuns(data?: DashboardData | null) {
   const maybeRecent = data?.council?.recentRuns;
   if (Array.isArray(maybeRecent) && maybeRecent.length) {
     return maybeRecent as unknown as CouncilRunData[];
@@ -80,7 +80,7 @@ function pickRecentRuns(data?: DashboardData) {
   return [];
 }
 
-function statusTone(ok?: boolean, accepted?: boolean, hasError?: boolean): "success" | "warning" | "danger" | "neutral" {
+function statusTone(ok?: boolean, accepted?: boolean, hasError?: boolean): "success" | "warning" | "danger" | "default" {
   if (hasError || ok === false) {
     return "danger";
   }
@@ -90,7 +90,7 @@ function statusTone(ok?: boolean, accepted?: boolean, hasError?: boolean): "succ
   if (ok) {
     return "warning";
   }
-  return "neutral";
+  return "default";
 }
 
 export default function ValidationPage() {
