@@ -175,3 +175,13 @@ It does need:
 
 That is enough to make prompt quality improve across iterations instead of
 repeating the same failure.
+
+## Current Implementation Status
+
+The current foundation now includes:
+- prompt ledger storage in project state
+- prompt history exposure through the CLI
+- prompt ledger visibility in the dashboard
+
+The next meaningful step is to make critique and improvement logic more automatic
+instead of relying on manual recording.

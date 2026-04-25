@@ -2,18 +2,24 @@
   "project": "MZTEK",
   "stage": "Early Core MVP",
   "current_phase": "Phase 3 to Phase 4 transition",
-  "current_task": "Turn MZTEK from a validation-and-benchmark CLI into a prompt-governance loop with response analysis, critique, and better-next-prompt support.",
+  "current_task": "Turn MZTEK from a validation-and-benchmark CLI into a prompt-governance loop with response analysis, critique, better-next-prompt support, and capability-aware knowledge selection.",
   "current_focus": [
     "Define prompt feedback architecture",
     "Prepare prompt builder and response analyzer path",
-    "Keep project truth visible through a live tracker"
+    "Formalize the GenAI capability map for prompt construction, validation, and idea shaping"
   ],
   "latest_capability_gains": [
     "Benchmark-aware validation for seeded sample projects",
     "CLI project report with benchmark gaps and next candidate tasks",
     "Career Mantra benchmark pack and governed sample seeding",
     "Regression fixtures for audit trail, truthfulness, privacy, and status telemetry failures",
-    "Prompt feedback architecture documented as a first-class MZTEK subsystem"
+    "Prompt feedback architecture documented as a first-class MZTEK subsystem",
+    "GenAI capability mapping documented as a first-class MZTEK knowledge system",
+    "User-connected Google source API scaffold added as a safer path toward NotebookLM-compatible source access",
+    "Local dashboard server added with project truth, validation snapshot, and a Decision Trace panel",
+    "Dashboard now auto-refreshes and defaults to the main MZTEK workspace or sample sandbox when no project is passed",
+    "Prompt ledger foundation added so prompt attempts, critiques, and next strategies are stored and shown in the dashboard",
+    "QA review ledger started so builder-side and QA-side communication can be tracked separately in project truth"
   ],
   "completed_recently": [
     "Separated core product, samples, library, and evidence lanes",
@@ -23,20 +29,22 @@
     "Expanded Career Mantra into a realistic simulation/testing domain"
   ],
   "pending_next": [
-    "Implement prompt ledger structure",
     "Implement response analysis categories in code",
     "Implement first prompt improvement logic",
-    "Add stronger notebook/project summary flow"
+    "Start capability-aware knowledge-pack selection logic",
+    "Add stronger notebook/project summary flow",
+    "Decide next source adapter step after Google account connection foundation",
+    "Refine dashboard layout from real usage feedback"
   ],
   "blockers": [],
   "latest_validation": {
     "summary": "Core regression suite is green.",
-    "tests_passing": 17,
-    "tests_total": 17
+    "tests_passing": 25,
+    "tests_total": 25
   },
   "active_team": [
     "Core Lead: architecture, implementation, integration",
     "Scoped worker support used for fixture docs and build-board artifacts when parallel work helps"
   ],
-  "updated_at": "2026-04-24T03:10:00+05:30"
+  "updated_at": "2026-04-24T19:10:00+05:30"
 }
