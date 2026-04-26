@@ -176,9 +176,63 @@ function resolveProjectDir(url, projectDir, workspaceRoot) {
   return projectDir;
 }
 
+function buildActivityStreamPayload(data, runtimeItems = []) {
+  const items = [
+    ...runtimeItems,
+    ...(data.activityFeed || []).map((item, index) => ({
+      id: `activity-${index}-${item.at || "unknown"}`,
+      type: "activity",
+      title: item.title,
+      detail: item.detail,
+      at: item.at || "",
+      source: item.kind || "system"
+    })),
+    ...(data.decisionLog || []).map((item, index) => ({
+      id: `decision-${index}-${item.at || "unknown"}`,
+      type: "decision",
+      title: item.decision,
+      detail: item.reason,
+      at: item.at || "",
+      source: "decision-log"
+    }))
+  ]
+    .sort((left, right) => String(right.at).localeCompare(String(left.at)))
+    .slice(0, 50);
+
+  return {
+    ok: true,
+    generatedAt: data.generatedAt,
+    project: {
+      key: data.selectedProjectKey,
+      name: data.project?.name || "",
+      path: data.selectedProjectDir
+    },
+    items
+  };
+}
+
 export function createDashboardServer({ projectDir, workspaceRoot, env = process.env, fetchImpl = fetch }) {
-  return http.createServer((request, response) => {
+  const runtimeItems = [];
+  let runtimeSeq = 0;
+  function recordRuntimeEvent(type, detail = "", source = "runtime") {
+    runtimeSeq += 1;
+    runtimeItems.unshift({
+      id: `runtime-${runtimeSeq}`,
+      type: "runtime",
+      title: type,
+      detail,
+      at: new Date().toISOString(),
+      source
+    });
+    if (runtimeItems.length > 100) {
+      runtimeItems.length = 100;
+    }
+  }
+
+  const server = http.createServer((request, response) => {
     const url = new URL(request.url, `http://${request.headers.host || "localhost"}`);
+
+    recordRuntimeEvent("api_request", `${request.method} ${url.pathname}`);
 
     if (request.method === "GET" && url.pathname === "/health") {
       sendJson(response, 200, { ok: true, service: "mztek-dashboard" });
@@ -434,6 +488,11 @@ export function createDashboardServer({ projectDir, workspaceRoot, env = process
       const resolvedProjectDir = resolveProjectDir(url, projectDir, workspaceRoot);
       const data = buildDashboardData(resolvedProjectDir, workspaceRoot, env);
 
+      if (request.method === "GET" && url.pathname === "/api/activity-stream") {
+        sendJson(response, 200, buildActivityStreamPayload(data, runtimeItems));
+        return;
+      }
+
       if (request.method === "GET" && url.pathname === "/api/dashboard") {
         sendJson(response, 200, data);
         return;
@@ -455,6 +514,9 @@ export function createDashboardServer({ projectDir, workspaceRoot, env = process
       });
     }
   });
+
+  server.recordRuntimeEvent = recordRuntimeEvent;
+  return server;
 }
 
 export function startDashboardServer(options) {
@@ -464,6 +526,9 @@ export function startDashboardServer(options) {
     server.once("error", reject);
     server.listen(port, () => {
       server.off("error", reject);
+      if (typeof server.recordRuntimeEvent === "function") {
+        server.recordRuntimeEvent("dashboard_started", `listening on ${port}`);
+      }
       resolve(server);
     });
   });

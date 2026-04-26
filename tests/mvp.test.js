@@ -444,6 +444,59 @@ test("dashboard server switches projects from query string", async () => {
   assert.equal(payload.selectedProjectDir, "E:/MZTEK");
 });
 
+test("dashboard activity-stream route returns timeline payload", async () => {
+  const server = createDashboardServer({
+    projectDir: "E:/MZTEK/sandboxes/career-mantra",
+    workspaceRoot: "E:/MZTEK"
+  });
+
+  await new Promise((resolve) => server.listen(0, resolve));
+  const port = server.address().port;
+
+  const response = await fetch(`http://127.0.0.1:${port}/api/activity-stream?project=mztek`);
+  const payload = await response.json();
+  server.close();
+
+  assert.equal(response.status, 200);
+  assert.equal(payload.ok, true);
+  assert.equal(typeof payload.generatedAt, "string");
+  assert.equal(typeof payload.project?.name, "string");
+  assert.equal(Array.isArray(payload.items), true);
+  if (payload.items.length > 0) {
+    assert.equal(["activity", "decision", "runtime"].includes(payload.items[0].type), true);
+  }
+});
+
+test("dashboard activity-stream records runtime events from real actions", async () => {
+  const server = createDashboardServer({
+    projectDir: "E:/MZTEK/sandboxes/career-mantra",
+    workspaceRoot: "E:/MZTEK"
+  });
+
+  await new Promise((resolve) => server.listen(0, resolve));
+  const port = server.address().port;
+
+  const beforeResponse = await fetch(`http://127.0.0.1:${port}/api/activity-stream?project=mztek`);
+  const beforePayload = await beforeResponse.json();
+  const beforeCount = beforePayload.items.length;
+
+  await fetch(`http://127.0.0.1:${port}/health`);
+  await fetch(`http://127.0.0.1:${port}/api/dashboard?project=mztek`);
+
+  const afterResponse = await fetch(`http://127.0.0.1:${port}/api/activity-stream?project=mztek`);
+  const afterPayload = await afterResponse.json();
+  const afterCount = afterPayload.items.length;
+  server.close();
+
+  assert.equal(afterResponse.status, 200);
+  assert.equal(afterCount > beforeCount, true);
+  const runtimeEventDetails = afterPayload.items
+    .filter((item) => item.type === "runtime")
+    .map((item) => item.detail);
+  assert.equal(runtimeEventDetails.some((detail) => String(detail).includes("GET /health")), true);
+  assert.equal(runtimeEventDetails.some((detail) => String(detail).includes("GET /api/dashboard")), true);
+});
+
 test("dashboard nvidia route falls back to mock mode without API key", async () => {
   const root = makeTempProject();
   const server = createDashboardServer({
